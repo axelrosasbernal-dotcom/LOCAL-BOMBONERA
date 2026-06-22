@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
+import { useTheme } from '../../context/ThemeContext'
 import styles from './Navbar.module.css'
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
+  const { dark, toggle } = useTheme()
 
   return (
     <header className={styles.header}>
@@ -31,6 +33,14 @@ export default function Navbar() {
             <span>📞</span> 77289212
           </a>
           <a href="#categorias" className={styles.cta}>Pedir Ahora</a>
+          <button
+            className={styles.themeToggle}
+            onClick={toggle}
+            aria-label={dark ? 'Activar modo claro' : 'Activar modo oscuro'}
+            title={dark ? 'Modo claro' : 'Modo oscuro'}
+          >
+            {dark ? '☀️' : '🌙'}
+          </button>
           <button
             className={styles.hamburger}
             onClick={() => setOpen(!open)}

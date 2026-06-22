@@ -41,6 +41,29 @@
   --transition-slow: 0.35s ease;
 }
 
+/* Modo claro */
+[data-theme="light"] {
+  --blue-dark:   #d6e0f5;
+  --blue:        #003087;
+  --blue-mid:    #e8eefa;
+  --blue-card:   #f0f4fc;
+  --blue-hover:  #dce6f5;
+
+  --dark:        #f4f6fb;
+
+  --text-white:  #001a52;
+  --text-light:  rgba(0, 26, 82, 0.85);
+  --text-muted:  rgba(0, 26, 82, 0.5);
+
+  --border-yellow: rgba(245, 197, 0, 0.4);
+  --border-blue:   rgba(0, 48, 135, 0.2);
+
+  --shadow-sm:   0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md:   0 8px 32px rgba(0, 0, 0, 0.12);
+  --shadow-yellow: 0 4px 24px rgba(245, 197, 0, 0.4);
+  --shadow-card: 0 12px 40px rgba(0, 0, 0, 0.12);
+}
+
 *,
 *::before,
 *::after {
