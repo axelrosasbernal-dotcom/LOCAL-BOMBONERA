@@ -1,0 +1,47 @@
+import { useState } from 'react'
+import { Link, NavLink } from 'react-router-dom'
+import styles from './Navbar.module.css'
+
+export default function Navbar() {
+  const [open, setOpen] = useState(false)
+
+  return (
+    <header className={styles.header}>
+      <nav className={styles.navbar}>
+        {/* Logo */}
+        <Link to="/" className={styles.logo}>
+          <span className={styles.logoIcon}>🍔</span>
+          <span className={styles.logoText}>
+            <span className={styles.logoMain}>La Bombonera</span>
+            <span className={styles.logoSub}>Burguer's</span>
+          </span>
+        </Link>
+
+        {/* Links desktop */}
+        <ul className={`${styles.navLinks} ${open ? styles.navOpen : ''}`}>
+          <li><NavLink to="/" className={({isActive}) => isActive ? styles.activeLink : styles.link} onClick={() => setOpen(false)}>Inicio</NavLink></li>
+          <li><a href="#categorias" className={styles.link} onClick={() => setOpen(false)}>Menú</a></li>
+          <li><a href="#destacados" className={styles.link} onClick={() => setOpen(false)}>Destacados</a></li>
+          <li><a href="#contacto" className={styles.link} onClick={() => setOpen(false)}>Contacto</a></li>
+        </ul>
+
+        {/* CTA + Hamburger */}
+        <div className={styles.actions}>
+          <a href="tel:77289212" className={styles.phone}>
+            <span>📞</span> 77289212
+          </a>
+          <a href="#categorias" className={styles.cta}>Pedir Ahora</a>
+          <button
+            className={styles.hamburger}
+            onClick={() => setOpen(!open)}
+            aria-label="Abrir menú"
+          >
+            <span className={`${styles.bar} ${open ? styles.bar1Open : ''}`} />
+            <span className={`${styles.bar} ${open ? styles.bar2Open : ''}`} />
+            <span className={`${styles.bar} ${open ? styles.bar3Open : ''}`} />
+          </button>
+        </div>
+      </nav>
+    </header>
+  )
+}

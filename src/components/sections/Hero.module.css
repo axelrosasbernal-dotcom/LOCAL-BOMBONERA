@@ -1,0 +1,238 @@
+.hero {
+  position: relative;
+  min-height: calc(100vh - 68px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 4rem 2rem 4rem;
+  max-width: 1280px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+/* Patrón diagonal tipo camiseta de Boca */
+.pattern {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background-color: var(--dark);
+  background-image:
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 40px,
+      rgba(0, 48, 135, 0.15) 40px,
+      rgba(0, 48, 135, 0.15) 80px
+    );
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(ellipse at 70% 50%, rgba(0, 48, 135, 0.3) 0%, transparent 70%),
+              radial-gradient(ellipse at 10% 80%, rgba(245, 197, 0, 0.06) 0%, transparent 50%);
+}
+
+/* Contenido izquierdo */
+.content {
+  flex: 1;
+  max-width: 580px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  z-index: 1;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(245, 197, 0, 0.12);
+  border: 1px solid rgba(245, 197, 0, 0.35);
+  color: var(--yellow);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 0.4rem 1rem;
+  border-radius: 100px;
+  width: fit-content;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  line-height: 1;
+}
+
+.headingSmall {
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-weight: 400;
+  color: var(--text-light);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+
+.headingBig {
+  font-size: clamp(3rem, 8vw, 6rem);
+  font-weight: 900;
+  color: var(--yellow);
+  letter-spacing: -1px;
+  text-transform: uppercase;
+  text-shadow: 0 0 40px rgba(245, 197, 0, 0.3);
+  line-height: 0.9;
+}
+
+.tagline {
+  font-size: clamp(1rem, 2.5vw, 1.3rem);
+  color: var(--text-light);
+  font-weight: 300;
+  letter-spacing: 0.5px;
+}
+
+.tagline strong {
+  color: var(--yellow);
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.btnPrimary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--yellow);
+  color: var(--blue-dark);
+  font-weight: 800;
+  font-size: 1rem;
+  padding: 0.9rem 2rem;
+  border-radius: var(--radius-md);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all var(--transition);
+  box-shadow: var(--shadow-yellow);
+}
+
+.btnPrimary:hover {
+  background: var(--yellow-light);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 32px rgba(245, 197, 0, 0.5);
+}
+
+.btnSecondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: var(--text-white);
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.9rem 2rem;
+  border-radius: var(--radius-md);
+  transition: all var(--transition);
+}
+
+.btnSecondary:hover {
+  border-color: var(--yellow);
+  color: var(--yellow);
+  background: rgba(245, 197, 0, 0.08);
+}
+
+.phones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.dot {
+  color: var(--yellow);
+}
+
+/* Imagen derecha */
+.imageWrap {
+  position: relative;
+  flex-shrink: 0;
+  width: clamp(280px, 40vw, 520px);
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heroImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-xl);
+  border: 3px solid rgba(245, 197, 0, 0.4);
+  box-shadow: var(--shadow-card), 0 0 60px rgba(245, 197, 0, 0.15);
+  position: relative;
+  z-index: 1;
+}
+
+.glowRing {
+  position: absolute;
+  inset: -12px;
+  border-radius: calc(var(--radius-xl) + 12px);
+  background: conic-gradient(
+    from 0deg,
+    var(--yellow) 0%,
+    transparent 30%,
+    var(--blue) 60%,
+    transparent 80%,
+    var(--yellow) 100%
+  );
+  opacity: 0.25;
+  animation: spin 8s linear infinite;
+  z-index: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .hero {
+    flex-direction: column;
+    text-align: center;
+    padding: 3rem 1.5rem;
+    min-height: auto;
+  }
+
+  .badge {
+    margin: 0 auto;
+  }
+
+  .actions {
+    justify-content: center;
+  }
+
+  .phones {
+    justify-content: center;
+  }
+
+  .imageWrap {
+    width: min(340px, 80vw);
+  }
+}
+
+@media (max-width: 480px) {
+  .btnPrimary,
+  .btnSecondary {
+    width: 100%;
+    justify-content: center;
+  }
+}

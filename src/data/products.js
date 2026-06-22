@@ -1,0 +1,71 @@
+export const categories = [
+  { id: 'hamburguesas', name: 'Hamburguesas', icon: '🍔', description: 'Nuestras burgers icónicas' },
+  { id: 'lomitos',      name: 'Lomitos',      icon: '🥖', description: 'El clásico que enamora' },
+  { id: 'picar',        name: 'Para Picar',   icon: '🍖', description: 'Para compartir' },
+  { id: 'especiales',   name: 'Especiales',   icon: '⭐', description: 'Lo mejor de la casa' },
+]
+
+export const products = [
+  {
+    id: 1,
+    name: 'Hamburguesa del Pueblo',
+    category: 'hamburguesas',
+    price: 10,
+    ingredients: 'Carne · Queso · Ensalada · Papas',
+    image: '/images/burger-del-pueblo.jpg',
+    featured: true,
+    badge: null,
+  },
+  {
+    id: 2,
+    name: 'Hamburguesa JR-10',
+    category: 'hamburguesas',
+    price: 18,
+    ingredients: 'Carne · Tocino · Queso Cheddar · Ensalada · Papas',
+    image: '/images/burger-jr10.jpg',
+    featured: true,
+    badge: 'Popular',
+  },
+  {
+    id: 3,
+    name: 'Burger La Bombonera',
+    category: 'especiales',
+    price: 25,
+    ingredients: 'Carne · 2 Quesos · Tocino · Ensalada · Salsas · Papas',
+    image: '/images/burger-bombonera.jpg',
+    featured: true,
+    badge: 'Estrella',
+  },
+  {
+    id: 4,
+    name: 'Lomito Simple',
+    category: 'lomitos',
+    price: 12,
+    ingredients: 'Carne · Huevo · Ensalada · Papas',
+    image: '/images/lomito-simple.jpg',
+    featured: true,
+    badge: null,
+  },
+  {
+    id: 5,
+    name: 'Lomito Especial',
+    category: 'lomitos',
+    price: 15,
+    ingredients: 'Carne · Jamón · Chorrellana · Papas',
+    image: '/images/lomito-especial.jpg',
+    featured: false,
+    badge: 'Nuevo',
+  },
+  {
+    id: 6,
+    name: 'Picadito a la Scaloneta',
+    category: 'picar',
+    price: 25,
+    ingredients: 'Carne · Chorizo · Papas a la Provenzal · Salsas',
+    image: '/images/picadito-scaloneta.jpg',
+    featured: true,
+    badge: 'Para 2',
+  },
+]
+
+export const featured = products.filter(p => p.featured)
