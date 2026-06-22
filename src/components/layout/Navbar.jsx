@@ -39,7 +39,7 @@ export default function Navbar() {
             aria-label={dark ? 'Activar modo claro' : 'Activar modo oscuro'}
             title={dark ? 'Modo claro' : 'Modo oscuro'}
           >
-            {dark ? '☀️' : '🌙'}
+            {dark ? '🌙' : '☀️'}
           </button>
           <button
             className={styles.hamburger}
