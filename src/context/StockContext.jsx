@@ -45,6 +45,8 @@ export function StockProvider({ children }) {
     if (!hasLocalData) {
       supabase.from('stock').select('product_id, in_stock').then(({ data, error }) => {
         if (error) { console.warn('[Stock] Supabase read:', error.message); return }
+        // Re-verificar: si el usuario actuó mientras esperábamos, no pisar sus cambios
+        if (loadFromLS() !== null) return
         if (data?.length > 0) {
           applyMap(prev => {
             const map = { ...prev }
