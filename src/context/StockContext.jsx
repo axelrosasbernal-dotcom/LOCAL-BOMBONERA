@@ -38,24 +38,19 @@ export function StockProvider({ children }) {
   }
 
   useEffect(() => {
-    // Solo usa Supabase como semilla si este navegador no tiene datos propios.
-    // Si ya tiene localStorage, confiamos en él: los datos de Supabase pueden
-    // estar desactualizados porque las escrituras fallaron por RLS.
-    const hasLocalData = loadFromLS() !== null
-    if (!hasLocalData) {
-      supabase.from('stock').select('product_id, in_stock').then(({ data, error }) => {
-        if (error) { console.warn('[Stock] Supabase read:', error.message); return }
-        // Re-verificar: si el usuario actuó mientras esperábamos, no pisar sus cambios
-        if (loadFromLS() !== null) return
-        if (data?.length > 0) {
-          applyMap(prev => {
-            const map = { ...prev }
-            data.forEach(row => { map[row.product_id] = row.in_stock })
-            return map
-          })
-        }
-      })
-    }
+    // Siempre sincronizar desde Supabase al montar: es la fuente de verdad compartida.
+    // El localStorage solo sirve para el render inicial (evitar flash), pero Supabase
+    // siempre tiene los datos más recientes del admin.
+    supabase.from('stock').select('product_id, in_stock').then(({ data, error }) => {
+      if (error) { console.warn('[Stock] Supabase read:', error.message); return }
+      if (data?.length > 0) {
+        applyMap(prev => {
+          const map = { ...prev }
+          data.forEach(row => { map[row.product_id] = row.in_stock })
+          return map
+        })
+      }
+    })
 
     // BroadcastChannel: sync instantáneo entre pestañas del mismo navegador
     try {
