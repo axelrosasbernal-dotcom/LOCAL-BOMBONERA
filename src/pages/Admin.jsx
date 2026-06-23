@@ -1,0 +1,158 @@
+import { useState } from 'react'
+import { supabase } from '../services/supabase'
+import { useAuth } from '../context/AuthContext'
+import { useStock } from '../context/StockContext'
+import { products } from '../data/products'
+import styles from './Admin.module.css'
+
+export default function Admin() {
+  const { user, loading: authLoading } = useAuth()
+  const { stockMap, toggleStock } = useStock()
+
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [loginError, setLoginError] = useState('')
+  const [loggingIn, setLoggingIn] = useState(false)
+  const [toggling, setToggling] = useState(null)
+
+  const handleLogin = async (e) => {
+    e.preventDefault()
+    setLoggingIn(true)
+    setLoginError('')
+    const { error } = await supabase.auth.signInWithPassword({ email, password })
+    if (error) setLoginError('Email o contraseña incorrectos.')
+    setLoggingIn(false)
+  }
+
+  const handleToggle = async (productId) => {
+    setToggling(productId)
+    await toggleStock(productId)
+    setToggling(null)
+  }
+
+  if (authLoading) {
+    return (
+      <div className={styles.centered}>
+        <p className={styles.loadingText}>Cargando...</p>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return (
+      <div className={styles.loginPage}>
+        <div className={styles.loginCard}>
+          <div className={styles.loginLogo}>🍔</div>
+          <h1 className={styles.loginTitle}>Panel Administrativo</h1>
+          <p className={styles.loginSub}>Burguer's La Bombonera</p>
+          <form onSubmit={handleLogin} className={styles.loginForm}>
+            <input
+              className={styles.input}
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+              autoComplete="email"
+            />
+            <input
+              className={styles.input}
+              type="password"
+              placeholder="Contraseña"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+              autoComplete="current-password"
+            />
+            {loginError && <p className={styles.loginError}>{loginError}</p>}
+            <button type="submit" className={styles.loginBtn} disabled={loggingIn}>
+              {loggingIn ? 'Ingresando...' : 'Ingresar'}
+            </button>
+          </form>
+        </div>
+      </div>
+    )
+  }
+
+  const disponibles = products.filter(p => stockMap[p.id] !== false).length
+  const sinStock = products.length - disponibles
+
+  return (
+    <div className={styles.adminPage}>
+      <header className={styles.header}>
+        <div className={styles.headerLeft}>
+          <span className={styles.headerLogo}>🍔</span>
+          <div>
+            <h1 className={styles.headerTitle}>Panel Administrativo</h1>
+            <p className={styles.headerSub}>Burguer's La Bombonera</p>
+          </div>
+        </div>
+        <button onClick={() => supabase.auth.signOut()} className={styles.logoutBtn}>
+          Cerrar sesión
+        </button>
+      </header>
+
+      <main className={styles.main}>
+        <div className={styles.statsRow}>
+          <div className={styles.stat}>
+            <span className={styles.statNum}>{disponibles}</span>
+            <span className={styles.statLabel}>🟢 Disponibles</span>
+          </div>
+          <div className={styles.stat}>
+            <span className={styles.statNum}>{sinStock}</span>
+            <span className={styles.statLabel}>🔴 Sin stock</span>
+          </div>
+          <div className={styles.stat}>
+            <span className={styles.statNum}>{products.length}</span>
+            <span className={styles.statLabel}>Total productos</span>
+          </div>
+        </div>
+
+        <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>Stock de productos</h2>
+          <div className={styles.productList}>
+            {products.map(product => {
+              const inStock = stockMap[product.id] !== false
+              const isToggling = toggling === product.id
+
+              return (
+                <div
+                  key={product.id}
+                  className={`${styles.productRow} ${!inStock ? styles.rowOutOfStock : ''}`}
+                >
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className={styles.productImg}
+                    onError={e => { e.target.src = '/images/hero-banner.jpg' }}
+                  />
+                  <div className={styles.productInfo}>
+                    <span className={styles.productName}>{product.name}</span>
+                    <span className={styles.productMeta}>
+                      {product.category} · {product.price} Bs.
+                    </span>
+                  </div>
+                  <span className={`${styles.stockBadge} ${inStock ? styles.badgeAvail : styles.badgeOut}`}>
+                    {inStock ? '🟢 Disponible' : '🔴 Sin stock'}
+                  </span>
+                  <button
+                    className={`${styles.toggleBtn} ${inStock ? styles.btnMarkOut : styles.btnMarkAvail}`}
+                    onClick={() => handleToggle(product.id)}
+                    disabled={isToggling}
+                  >
+                    {isToggling
+                      ? 'Guardando...'
+                      : inStock
+                        ? '🔴 Marcar sin stock'
+                        : '🟢 Marcar disponible'
+                    }
+                  </button>
+                </div>
+              )
+            })}
+          </div>
+        </section>
+      </main>
+    </div>
+  )
+}

@@ -1,0 +1,351 @@
+.centered {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--dark);
+}
+
+.loadingText {
+  color: var(--text-muted);
+  font-size: 1rem;
+}
+
+/* ── Login ────────────────────────────────────── */
+
+.loginPage {
+  min-height: 100vh;
+  background: var(--dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.loginCard {
+  background: var(--blue-card);
+  border: 1px solid var(--border-blue);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+  box-shadow: var(--shadow-md);
+}
+
+.loginLogo {
+  font-size: 3rem;
+  margin-bottom: 0.75rem;
+}
+
+.loginTitle {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text-white);
+  margin-bottom: 0.25rem;
+}
+
+.loginSub {
+  font-size: 0.85rem;
+  color: var(--yellow);
+  font-weight: 600;
+  margin-bottom: 2rem;
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.input {
+  background: var(--blue-mid);
+  border: 1px solid var(--border-blue);
+  border-radius: var(--radius-sm);
+  color: var(--text-white);
+  font-size: 0.95rem;
+  padding: 0.75rem 1rem;
+  outline: none;
+  transition: border-color var(--transition);
+}
+
+.input::placeholder { color: var(--text-muted); }
+
+.input:focus { border-color: var(--yellow); }
+
+.loginError {
+  font-size: 0.82rem;
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.1);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.75rem;
+}
+
+.loginBtn {
+  background: var(--yellow);
+  color: var(--blue-dark);
+  font-weight: 800;
+  font-size: 1rem;
+  padding: 0.85rem;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition);
+  margin-top: 0.25rem;
+}
+
+.loginBtn:hover:not(:disabled) {
+  background: var(--yellow-light);
+  transform: translateY(-1px);
+}
+
+.loginBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ── Admin page ────────────────────────────────── */
+
+.adminPage {
+  min-height: 100vh;
+  background: var(--dark);
+  color: var(--text-white);
+}
+
+.header {
+  background: var(--blue-card);
+  border-bottom: 2px solid var(--yellow);
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.headerLogo { font-size: 1.8rem; }
+
+.headerTitle {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text-white);
+  line-height: 1.2;
+}
+
+.headerSub {
+  font-size: 0.75rem;
+  color: var(--yellow);
+  font-weight: 600;
+}
+
+.logoutBtn {
+  background: transparent;
+  border: 1px solid var(--border-blue);
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.logoutBtn:hover {
+  border-color: #ff6b6b;
+  color: #ff6b6b;
+}
+
+/* ── Main ─────────────────────────────────────── */
+
+.main {
+  padding: 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* ── Stats ────────────────────────────────────── */
+
+.statsRow {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.stat {
+  flex: 1;
+  min-width: 100px;
+  background: var(--blue-card);
+  border: 1px solid var(--border-blue);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.statNum {
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--yellow);
+  line-height: 1;
+}
+
+.statLabel {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* ── Section ──────────────────────────────────── */
+
+.section {
+  background: var(--blue-card);
+  border: 1px solid var(--border-blue);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-white);
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--border-blue);
+  background: var(--blue-mid);
+}
+
+/* ── Product list ─────────────────────────────── */
+
+.productList {
+  display: flex;
+  flex-direction: column;
+}
+
+.productRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 1.25rem;
+  border-bottom: 1px solid var(--border-blue);
+  transition: background var(--transition);
+}
+
+.productRow:last-child { border-bottom: none; }
+
+.productRow:hover { background: var(--blue-hover); }
+
+.rowOutOfStock { opacity: 0.75; }
+
+.productImg {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.productInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.productName {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-white);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.productMeta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: capitalize;
+}
+
+.stockBadge {
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.3rem 0.7rem;
+  border-radius: 100px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.badgeAvail {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.badgeOut {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.toggleBtn {
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 0.55rem 1rem;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.toggleBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btnMarkOut {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+.btnMarkOut:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.3);
+}
+
+.btnMarkAvail {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.4);
+}
+
+.btnMarkAvail:hover:not(:disabled) {
+  background: rgba(34, 197, 94, 0.3);
+}
+
+/* ── Mobile ───────────────────────────────────── */
+
+@media (max-width: 600px) {
+  .productRow {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .stockBadge { display: none; }
+
+  .toggleBtn {
+    flex: 1;
+    text-align: center;
+  }
+}

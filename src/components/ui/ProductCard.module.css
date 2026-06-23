@@ -116,8 +116,42 @@
   white-space: nowrap;
 }
 
-.btn:hover {
+.btn:hover:not(:disabled) {
   background: var(--yellow-light);
   transform: translateY(-1px);
   box-shadow: var(--shadow-yellow);
+}
+
+.cardOutOfStock {
+  opacity: 0.75;
+}
+
+.cardOutOfStock .image {
+  filter: grayscale(40%);
+}
+
+.sinStockBadge {
+  position: absolute;
+  top: 0.6rem;
+  left: 0.6rem;
+  background: #ef4444;
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 800;
+  padding: 0.2rem 0.55rem;
+  border-radius: 100px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btnDisabled {
+  background: var(--blue-mid);
+  color: var(--text-muted);
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.btnDisabled:hover {
+  transform: none;
+  box-shadow: none;
 }

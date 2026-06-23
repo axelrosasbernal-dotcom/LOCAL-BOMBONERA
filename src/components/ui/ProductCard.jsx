@@ -1,13 +1,16 @@
 import { useState } from 'react'
 import ProductModal from './ProductModal'
+import { useStock } from '../../context/StockContext'
 import styles from './ProductCard.module.css'
 
 export default function ProductCard({ product }) {
   const [modalOpen, setModalOpen] = useState(false)
+  const { stockMap } = useStock()
+  const inStock = stockMap[product.id] !== false
 
   return (
     <>
-      <article className={styles.card}>
+      <article className={`${styles.card} ${!inStock ? styles.cardOutOfStock : ''}`}>
         <div className={styles.imageWrap}>
           <img
             src={product.image}
@@ -16,7 +19,10 @@ export default function ProductCard({ product }) {
             loading="lazy"
             onError={e => { e.target.src = '/images/hero-banner.jpg' }}
           />
-          {product.badge && <span className={styles.badge}>{product.badge}</span>}
+          {!inStock
+            ? <span className={styles.sinStockBadge}>Sin stock</span>
+            : product.badge && <span className={styles.badge}>{product.badge}</span>
+          }
         </div>
 
         <div className={styles.body}>
@@ -30,11 +36,12 @@ export default function ProductCard({ product }) {
               <span className={styles.priceCurrency}>Bs.</span>
             </span>
             <button
-              className={styles.btn}
-              onClick={() => setModalOpen(true)}
+              className={`${styles.btn} ${!inStock ? styles.btnDisabled : ''}`}
+              onClick={() => inStock && setModalOpen(true)}
               type="button"
+              disabled={!inStock}
             >
-              + Agregar
+              {inStock ? '+ Agregar' : 'Sin stock'}
             </button>
           </div>
         </div>
