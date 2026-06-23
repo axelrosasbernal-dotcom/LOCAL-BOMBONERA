@@ -164,38 +164,12 @@ export default function Cart() {
                   >
                     🏃 Retiro en local
                   </button>
-                  <button
-                    type="button"
-                    className={`${styles.tipoBtn} ${form.tipo === 'delivery' ? styles.tipoActive : ''}`}
-                    onClick={() => set('tipo', 'delivery')}
-                  >
-                    🛵 Delivery
-                  </button>
+                  <div className={styles.tipoBtnDisabled}>
+                    <span className={styles.tipoBtnDisabledText}>🛵 Delivery</span>
+                    <span className={styles.tipoPronto}>Próximamente</span>
+                  </div>
                 </div>
 
-                {form.tipo === 'delivery' && (
-                  <div className={styles.deliveryFields}>
-                    <div className={styles.field}>
-                      <label className={styles.label}>Dirección *</label>
-                      <input
-                        className={`${styles.input} ${errors.direccion ? styles.inputError : ''}`}
-                        placeholder="Calle y número"
-                        value={form.direccion}
-                        onChange={e => set('direccion', e.target.value)}
-                      />
-                      {errors.direccion && <span className={styles.error}>{errors.direccion}</span>}
-                    </div>
-                    <div className={styles.field}>
-                      <label className={styles.label}>Referencia</label>
-                      <input
-                        className={styles.input}
-                        placeholder="Frente al parque, color de casa..."
-                        value={form.referencia}
-                        onChange={e => set('referencia', e.target.value)}
-                      />
-                    </div>
-                  </div>
-                )}
               </div>
             </>
           )}

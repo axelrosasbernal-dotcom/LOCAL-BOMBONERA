@@ -302,6 +302,35 @@
   font-weight: 700;
 }
 
+.tipoBtnDisabled {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.2rem;
+  border: 1.5px dashed rgba(255,255,255,0.15);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem;
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.tipoBtnDisabledText {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-decoration: line-through;
+}
+
+.tipoPronto {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+}
+
 .deliveryFields {
   display: flex;
   flex-direction: column;
