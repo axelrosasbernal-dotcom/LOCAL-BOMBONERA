@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { AuthProvider } from './context/AuthContext'
 import { ThemeProvider } from './context/ThemeContext'
 import { CartProvider } from './context/CartContext'
 import { StockProvider } from './context/StockContext'
@@ -12,16 +11,14 @@ export default function App() {
     <ThemeProvider>
       <StockProvider>
         <CartProvider>
-          <AuthProvider>
-            <BrowserRouter>
-              <Routes>
-                <Route element={<Layout />}>
-                  <Route path="/" element={<Home />} />
-                </Route>
-                <Route path="/admin" element={<Admin />} />
-              </Routes>
-            </BrowserRouter>
-          </AuthProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route element={<Layout />}>
+                <Route path="/" element={<Home />} />
+              </Route>
+              <Route path="/admin" element={<Admin />} />
+            </Routes>
+          </BrowserRouter>
         </CartProvider>
       </StockProvider>
     </ThemeProvider>

@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { categories } from '../../data/products'
 import styles from './Categories.module.css'
 

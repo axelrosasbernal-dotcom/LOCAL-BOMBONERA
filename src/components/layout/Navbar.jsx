@@ -25,7 +25,7 @@ export default function Navbar() {
         <ul className={`${styles.navLinks} ${open ? styles.navOpen : ''}`}>
           <li><NavLink to="/" className={({isActive}) => isActive ? styles.activeLink : styles.link} onClick={() => setOpen(false)}>Inicio</NavLink></li>
           <li><a href="#categorias" className={styles.link} onClick={() => setOpen(false)}>Menú</a></li>
-          <li><a href="#destacados" className={styles.link} onClick={() => setOpen(false)}>Destacados</a></li>
+          <li><a href="#menu" className={styles.link} onClick={() => setOpen(false)}>Destacados</a></li>
           <li><a href="#contacto" className={styles.link} onClick={() => setOpen(false)}>Contacto</a></li>
         </ul>
 

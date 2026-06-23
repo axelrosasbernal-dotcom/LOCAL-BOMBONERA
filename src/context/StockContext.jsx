@@ -38,17 +38,22 @@ export function StockProvider({ children }) {
   }
 
   useEffect(() => {
-    // Carga desde Supabase (si funciona) para sincronizar entre dispositivos
-    supabase.from('stock').select('product_id, in_stock').then(({ data, error }) => {
-      if (error) { console.warn('[Stock] Supabase read:', error.message); return }
-      if (data?.length > 0) {
-        applyMap(prev => {
-          const map = { ...prev }
-          data.forEach(row => { map[row.product_id] = row.in_stock })
-          return map
-        })
-      }
-    })
+    // Solo usa Supabase como semilla si este navegador no tiene datos propios.
+    // Si ya tiene localStorage, confiamos en él: los datos de Supabase pueden
+    // estar desactualizados porque las escrituras fallaron por RLS.
+    const hasLocalData = loadFromLS() !== null
+    if (!hasLocalData) {
+      supabase.from('stock').select('product_id, in_stock').then(({ data, error }) => {
+        if (error) { console.warn('[Stock] Supabase read:', error.message); return }
+        if (data?.length > 0) {
+          applyMap(prev => {
+            const map = { ...prev }
+            data.forEach(row => { map[row.product_id] = row.in_stock })
+            return map
+          })
+        }
+      })
+    }
 
     // BroadcastChannel: sync instantáneo entre pestañas del mismo navegador
     try {
