@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { useTheme } from '../../context/ThemeContext'
+import { useCart } from '../../context/CartContext'
 import styles from './Navbar.module.css'
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
   const { dark, toggle } = useTheme()
+  const { count, openCart } = useCart()
 
   return (
     <header className={styles.header}>
@@ -27,12 +29,12 @@ export default function Navbar() {
           <li><a href="#contacto" className={styles.link} onClick={() => setOpen(false)}>Contacto</a></li>
         </ul>
 
-        {/* CTA + Hamburger */}
+        {/* Actions */}
         <div className={styles.actions}>
           <a href="tel:77289212" className={styles.phone}>
             <span>📞</span> 77289212
           </a>
-          <a href="#categorias" className={styles.cta}>Pedir Ahora</a>
+
           <button
             className={styles.themeToggle}
             onClick={toggle}
@@ -41,6 +43,14 @@ export default function Navbar() {
           >
             {dark ? '🌙' : '☀️'}
           </button>
+
+          <button className={styles.cartBtn} onClick={openCart} aria-label="Abrir carrito">
+            🛒
+            {count > 0 && <span className={styles.cartCount}>{count}</span>}
+          </button>
+
+          <a href="#menu" className={styles.cta}>Pedir Ahora</a>
+
           <button
             className={styles.hamburger}
             onClick={() => setOpen(!open)}

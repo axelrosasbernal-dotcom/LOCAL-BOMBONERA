@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { products, categories } from '../../data/products'
 import ProductCard from '../ui/ProductCard'
 import styles from './FeaturedProducts.module.css'
@@ -6,20 +5,23 @@ import styles from './FeaturedProducts.module.css'
 export default function FeaturedProducts({ filterCategory }) {
   const filtered = filterCategory
     ? products.filter(p => p.category === filterCategory)
-    : products.filter(p => p.featured)
+    : products
 
   const activeCat = categories.find(c => c.id === filterCategory)
 
   return (
-    <section className={styles.section} id="destacados">
+    <section className={styles.section} id="menu">
       <div className={styles.container}>
         <div className={styles.header}>
           <span className={styles.label}>
-            {activeCat ? activeCat.icon + ' ' + activeCat.name : '⭐ Destacados'}
+            {activeCat ? `${activeCat.icon} ${activeCat.name}` : '🍔 Menú completo'}
           </span>
           <h2 className={styles.title}>
-            {activeCat ? activeCat.name : 'Productos Estrella'}
+            {activeCat ? activeCat.name : 'Todo el Menú'}
           </h2>
+          <p className={styles.subtitle}>
+            Seleccioná lo que querés y armá tu pedido
+          </p>
         </div>
 
         {filtered.length === 0 ? (

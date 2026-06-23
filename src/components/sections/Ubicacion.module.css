@@ -1,0 +1,114 @@
+.section {
+  padding: 4rem 2rem;
+  background: rgba(0, 48, 135, 0.08);
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.header { text-align: center }
+
+.label {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--yellow);
+  margin-bottom: 0.5rem;
+}
+
+.title {
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  font-weight: 900;
+  color: var(--text-white);
+}
+
+.content {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.info {
+  background: var(--blue-card);
+  border: 1px solid var(--border-yellow);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.infoTitle {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+.loc {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.88rem;
+  color: var(--text-light);
+}
+.locIcon { flex-shrink: 0; margin-top: 0.05rem }
+
+.divider {
+  height: 1px;
+  background: var(--border-blue);
+  margin: 0.25rem 0;
+}
+
+.phone {
+  display: block;
+  font-size: 0.88rem;
+  color: var(--text-light);
+  transition: color var(--transition);
+}
+.phone:hover { color: var(--yellow) }
+
+.waLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.25rem;
+  padding: 0.5rem 1rem;
+  background: #25D366;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition);
+}
+.waLink:hover { background: #20ba58 }
+
+.mapWrap {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--border-yellow);
+  height: 340px;
+}
+
+.map {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+  filter: grayscale(20%) brightness(0.9);
+}
+
+@media (max-width: 768px) {
+  .content { grid-template-columns: 1fr }
+  .mapWrap { height: 260px }
+}

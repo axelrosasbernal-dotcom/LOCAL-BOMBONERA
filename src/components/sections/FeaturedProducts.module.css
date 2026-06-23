@@ -32,6 +32,12 @@
   letter-spacing: -0.5px;
 }
 
+.subtitle {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
