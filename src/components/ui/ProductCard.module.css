@@ -123,11 +123,39 @@
 }
 
 .cardOutOfStock {
-  opacity: 0.75;
+  opacity: 0.85;
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+.cardOutOfStock:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: rgba(239, 68, 68, 0.35);
 }
 
 .cardOutOfStock .image {
-  filter: grayscale(40%);
+  filter: grayscale(70%) brightness(0.7);
+}
+
+.imageOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 15, 30, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.imageOverlayText {
+  background: rgba(239, 68, 68, 0.92);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 900;
+  padding: 0.45rem 1.1rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
 }
 
 .sinStockBadge {
@@ -144,14 +172,27 @@
   letter-spacing: 0.5px;
 }
 
-.btnDisabled {
-  background: var(--blue-mid);
+.nameOutOfStock {
   color: var(--text-muted);
+}
+
+.priceOutOfStock .priceNum,
+.priceOutOfStock .priceCurrency {
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+.btnDisabled {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.35);
   cursor: not-allowed;
-  opacity: 0.7;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
 }
 
 .btnDisabled:hover {
   transform: none;
   box-shadow: none;
+  background: rgba(239, 68, 68, 0.15);
 }

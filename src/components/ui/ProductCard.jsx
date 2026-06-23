@@ -19,19 +19,21 @@ export default function ProductCard({ product }) {
             loading="lazy"
             onError={e => { e.target.src = '/images/hero-banner.jpg' }}
           />
-          {!inStock
-            ? <span className={styles.sinStockBadge}>Sin stock</span>
-            : product.badge && <span className={styles.badge}>{product.badge}</span>
-          }
+          {!inStock && (
+            <div className={styles.imageOverlay}>
+              <span className={styles.imageOverlayText}>Agotado</span>
+            </div>
+          )}
+          {inStock && product.badge && <span className={styles.badge}>{product.badge}</span>}
         </div>
 
         <div className={styles.body}>
           <p className={styles.category}>{product.category}</p>
-          <h3 className={styles.name}>{product.name}</h3>
+          <h3 className={`${styles.name} ${!inStock ? styles.nameOutOfStock : ''}`}>{product.name}</h3>
           <p className={styles.ingredients}>{product.ingredients}</p>
 
           <div className={styles.footer}>
-            <span className={styles.price}>
+            <span className={`${styles.price} ${!inStock ? styles.priceOutOfStock : ''}`}>
               <span className={styles.priceNum}>{product.price}</span>
               <span className={styles.priceCurrency}>Bs.</span>
             </span>
@@ -41,7 +43,7 @@ export default function ProductCard({ product }) {
               type="button"
               disabled={!inStock}
             >
-              {inStock ? '+ Agregar' : 'Sin stock'}
+              {inStock ? '+ Agregar' : 'No disponible'}
             </button>
           </div>
         </div>
