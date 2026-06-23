@@ -11,7 +11,8 @@ export function StockProvider({ children }) {
   const [stockMap, setStockMap] = useState(initialMap)
 
   useEffect(() => {
-    supabase.from('stock').select('product_id, in_stock').then(({ data }) => {
+    supabase.from('stock').select('product_id, in_stock').then(({ data, error }) => {
+      if (error) return
       if (data && data.length > 0) {
         setStockMap(prev => {
           const map = { ...prev }
@@ -19,18 +20,21 @@ export function StockProvider({ children }) {
           return map
         })
       }
-    })
+    }).catch(() => {})
 
-    const channel = supabase
-      .channel('stock-realtime')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'stock' }, payload => {
-        if (payload.new) {
-          setStockMap(prev => ({ ...prev, [payload.new.product_id]: payload.new.in_stock }))
-        }
-      })
-      .subscribe()
+    let channel
+    try {
+      channel = supabase
+        .channel('stock-realtime')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'stock' }, payload => {
+          if (payload.new) {
+            setStockMap(prev => ({ ...prev, [payload.new.product_id]: payload.new.in_stock }))
+          }
+        })
+        .subscribe()
+    } catch (_) {}
 
-    return () => supabase.removeChannel(channel)
+    return () => { if (channel) supabase.removeChannel(channel) }
   }, [])
 
   const toggleStock = async (productId) => {
