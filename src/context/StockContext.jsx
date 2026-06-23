@@ -1,49 +1,98 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useRef, useState } from 'react'
 import { supabase } from '../services/supabase'
 import { products } from '../data/products'
 
 const StockContext = createContext(null)
+const LS_KEY = 'bombonera_stock'
 
-const initialMap = {}
-products.forEach(p => { initialMap[p.id] = true })
+const defaultMap = {}
+products.forEach(p => { defaultMap[p.id] = true })
+
+function loadFromLS() {
+  try {
+    const raw = localStorage.getItem(LS_KEY)
+    return raw ? JSON.parse(raw) : null
+  } catch { return null }
+}
+
+function saveToLS(map) {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(map)) } catch {}
+}
 
 export function StockProvider({ children }) {
-  const [stockMap, setStockMap] = useState(initialMap)
+  const [stockMap, setStockMap] = useState(() => {
+    const stored = loadFromLS()
+    return stored ? { ...defaultMap, ...stored } : { ...defaultMap }
+  })
+
+  const bcRef = useRef(null)
+  const channelRef = useRef(null)
+
+  // Actualiza estado Y persiste en localStorage
+  const applyMap = (updater) => {
+    setStockMap(prev => {
+      const next = typeof updater === 'function' ? updater(prev) : updater
+      saveToLS(next)
+      return next
+    })
+  }
 
   useEffect(() => {
+    // Carga desde Supabase (si funciona) para sincronizar entre dispositivos
     supabase.from('stock').select('product_id, in_stock').then(({ data, error }) => {
-      if (error) return
-      if (data && data.length > 0) {
-        setStockMap(prev => {
+      if (error) { console.warn('[Stock] Supabase read:', error.message); return }
+      if (data?.length > 0) {
+        applyMap(prev => {
           const map = { ...prev }
           data.forEach(row => { map[row.product_id] = row.in_stock })
           return map
         })
       }
-    }).catch(() => {})
+    })
 
-    let channel
+    // BroadcastChannel: sync instantáneo entre pestañas del mismo navegador
     try {
-      channel = supabase
-        .channel('stock-realtime')
+      bcRef.current = new BroadcastChannel('bombonera_stock')
+      bcRef.current.onmessage = (e) => {
+        if (e.data?.type === 'stock_update') {
+          setStockMap(prev => ({ ...prev, [e.data.productId]: e.data.inStock }))
+        }
+      }
+    } catch {}
+
+    // Realtime de Supabase (funciona solo si está habilitado en el dashboard)
+    try {
+      channelRef.current = supabase
+        .channel('stock-changes')
         .on('postgres_changes', { event: '*', schema: 'public', table: 'stock' }, payload => {
           if (payload.new) {
-            setStockMap(prev => ({ ...prev, [payload.new.product_id]: payload.new.in_stock }))
+            applyMap(prev => ({ ...prev, [payload.new.product_id]: payload.new.in_stock }))
           }
         })
         .subscribe()
-    } catch (_) {}
+    } catch {}
 
-    return () => { if (channel) supabase.removeChannel(channel) }
+    return () => {
+      try { bcRef.current?.close() } catch {}
+      if (channelRef.current) supabase.removeChannel(channelRef.current)
+    }
   }, [])
 
   const toggleStock = async (productId) => {
-    const newValue = !stockMap[productId]
-    setStockMap(prev => ({ ...prev, [productId]: newValue }))
-    await supabase.from('stock').upsert(
+    const newValue = !(stockMap[productId] !== false)
+
+    // Guarda inmediatamente en localStorage — no depende de Supabase
+    applyMap(prev => ({ ...prev, [productId]: newValue }))
+
+    // Notifica otras pestañas al instante
+    try { bcRef.current?.postMessage({ type: 'stock_update', productId, inStock: newValue }) } catch {}
+
+    // Intenta sincronizar con Supabase (best-effort, no bloquea ni revierte)
+    const { error } = await supabase.from('stock').upsert(
       { product_id: productId, in_stock: newValue },
       { onConflict: 'product_id' }
     )
+    if (error) console.warn('[Stock] Supabase sync falló (cambio guardado localmente):', error.message)
   }
 
   return (
