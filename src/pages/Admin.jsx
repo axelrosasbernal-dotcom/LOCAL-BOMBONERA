@@ -1,27 +1,32 @@
 import { useState } from 'react'
-import { supabase } from '../services/supabase'
-import { useAuth } from '../context/AuthContext'
 import { useStock } from '../context/StockContext'
 import { products } from '../data/products'
 import styles from './Admin.module.css'
 
-export default function Admin() {
-  const { user, loading: authLoading } = useAuth()
-  const { stockMap, toggleStock } = useStock()
+const ADMIN_PASSWORD = 'bombonera2024'
 
-  const [email, setEmail] = useState('')
+export default function Admin() {
+  const { stockMap, toggleStock } = useStock()
+  const [autenticado, setAutenticado] = useState(
+    () => localStorage.getItem('admin_auth') === 'ok'
+  )
   const [password, setPassword] = useState('')
-  const [loginError, setLoginError] = useState('')
-  const [loggingIn, setLoggingIn] = useState(false)
+  const [error, setError] = useState('')
   const [toggling, setToggling] = useState(null)
 
-  const handleLogin = async (e) => {
+  const handleLogin = (e) => {
     e.preventDefault()
-    setLoggingIn(true)
-    setLoginError('')
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) setLoginError('Email o contraseña incorrectos.')
-    setLoggingIn(false)
+    if (password === ADMIN_PASSWORD) {
+      localStorage.setItem('admin_auth', 'ok')
+      setAutenticado(true)
+    } else {
+      setError('Contraseña incorrecta.')
+    }
+  }
+
+  const handleLogout = () => {
+    localStorage.removeItem('admin_auth')
+    setAutenticado(false)
   }
 
   const handleToggle = async (productId) => {
@@ -30,15 +35,7 @@ export default function Admin() {
     setToggling(null)
   }
 
-  if (authLoading) {
-    return (
-      <div className={styles.centered}>
-        <p className={styles.loadingText}>Cargando...</p>
-      </div>
-    )
-  }
-
-  if (!user) {
+  if (!autenticado) {
     return (
       <div className={styles.loginPage}>
         <div className={styles.loginCard}>
@@ -48,25 +45,16 @@ export default function Admin() {
           <form onSubmit={handleLogin} className={styles.loginForm}>
             <input
               className={styles.input}
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              required
-              autoComplete="email"
-            />
-            <input
-              className={styles.input}
               type="password"
               placeholder="Contraseña"
               value={password}
               onChange={e => setPassword(e.target.value)}
               required
-              autoComplete="current-password"
+              autoFocus
             />
-            {loginError && <p className={styles.loginError}>{loginError}</p>}
-            <button type="submit" className={styles.loginBtn} disabled={loggingIn}>
-              {loggingIn ? 'Ingresando...' : 'Ingresar'}
+            {error && <p className={styles.loginError}>{error}</p>}
+            <button type="submit" className={styles.loginBtn}>
+              Ingresar
             </button>
           </form>
         </div>
@@ -87,7 +75,7 @@ export default function Admin() {
             <p className={styles.headerSub}>Burguer's La Bombonera</p>
           </div>
         </div>
-        <button onClick={() => supabase.auth.signOut()} className={styles.logoutBtn}>
+        <button onClick={handleLogout} className={styles.logoutBtn}>
           Cerrar sesión
         </button>
       </header>
