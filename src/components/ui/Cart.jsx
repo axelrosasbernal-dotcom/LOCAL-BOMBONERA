@@ -3,7 +3,7 @@ import { useCart } from '../../context/CartContext'
 import { businessInfo } from '../../data/products'
 import styles from './Cart.module.css'
 
-const INITIAL_FORM = { nombre: '', telefono: '', tipo: 'retiro', direccion: '', referencia: '', horario: 'ahora', horaProgramada: '' }
+const INITIAL_FORM = { nombre: '', telefono: '', tipo: 'retiro', direccion: '', referencia: '', horario: 'ahora', horaProgramada: '', pago: 'efectivo' }
 
 function buildWhatsAppMsg(items, total, form) {
   const lines = []
@@ -18,6 +18,7 @@ function buildWhatsAppMsg(items, total, form) {
     if (form.referencia.trim()) lines.push(`*Referencia:* ${form.referencia}`)
   }
   lines.push(`*Horario de retiro:* ${form.horario === 'programado' ? form.horaProgramada : 'Ahora mismo'}`)
+  lines.push(`*Método de pago:* ${form.pago === 'qr' ? 'QR 📱' : 'Efectivo 💵'}`)
   lines.push('')
   lines.push('*Pedido:*')
   items.forEach(item => {
@@ -205,6 +206,26 @@ export default function Cart() {
                     )}
                   </>
                 )}
+
+                <div>
+                  <label className={styles.label}>Método de pago</label>
+                  <div className={styles.tipoRow}>
+                    <button
+                      type="button"
+                      className={`${styles.tipoBtn} ${form.pago === 'efectivo' ? styles.tipoActive : ''}`}
+                      onClick={() => set('pago', 'efectivo')}
+                    >
+                      💵 Efectivo
+                    </button>
+                    <button
+                      type="button"
+                      className={`${styles.tipoBtn} ${form.pago === 'qr' ? styles.tipoActive : ''}`}
+                      onClick={() => set('pago', 'qr')}
+                    >
+                      📱 QR
+                    </button>
+                  </div>
+                </div>
 
               </div>
             </>
