@@ -191,6 +191,17 @@
   margin-left: auto;
 }
 
+.editBtn {
+  background: transparent;
+  border: none;
+  font-size: 0.85rem;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity var(--transition);
+  padding: 0 0.1rem;
+}
+.editBtn:hover { opacity: 1 }
+
 .removeBtn {
   background: transparent;
   border: none;

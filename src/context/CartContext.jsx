@@ -5,17 +5,23 @@ const CartContext = createContext(null)
 function reducer(state, action) {
   switch (action.type) {
     case 'ADD':
-      return [...state, {
+      return [{
         cartId: Date.now() + Math.random(),
         product: action.product,
         quantity: action.quantity,
         customization: action.customization,
-      }]
+      }, ...state]
     case 'REMOVE':
       return state.filter(i => i.cartId !== action.cartId)
     case 'UPDATE_QTY':
       return state.map(i =>
         i.cartId === action.cartId ? { ...i, quantity: Math.max(1, action.quantity) } : i
+      )
+    case 'UPDATE_ITEM':
+      return state.map(i =>
+        i.cartId === action.cartId
+          ? { ...i, quantity: action.quantity, customization: action.customization }
+          : i
       )
     case 'CLEAR':
       return []
@@ -34,6 +40,7 @@ export function CartProvider({ children }) {
   }
   const removeItem  = (cartId)           => dispatch({ type: 'REMOVE', cartId })
   const updateQty   = (cartId, quantity) => dispatch({ type: 'UPDATE_QTY', cartId, quantity })
+  const updateItem  = (cartId, quantity, customization) => dispatch({ type: 'UPDATE_ITEM', cartId, quantity, customization })
   const clearCart   = ()                 => dispatch({ type: 'CLEAR' })
 
   const total = items.reduce((sum, i) => sum + i.product.price * i.quantity, 0)
@@ -43,7 +50,7 @@ export function CartProvider({ children }) {
     <CartContext.Provider value={{
       items, total, count,
       isOpen, openCart: () => setIsOpen(true), closeCart: () => setIsOpen(false),
-      addItem, removeItem, updateQty, clearCart,
+      addItem, removeItem, updateQty, updateItem, clearCart,
     }}>
       {children}
     </CartContext.Provider>

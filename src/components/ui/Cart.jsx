@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useCart } from '../../context/CartContext'
 import { businessInfo } from '../../data/products'
+import ProductModal from './ProductModal'
 import styles from './Cart.module.css'
 
 const INITIAL_FORM = { nombre: '', telefono: '', tipo: 'retiro', direccion: '', referencia: '', horario: 'ahora', horaProgramada: '', pago: 'efectivo' }
@@ -41,6 +42,7 @@ export default function Cart() {
   const [form, setForm] = useState(INITIAL_FORM)
   const [errors, setErrors] = useState({})
   const [sent, setSent] = useState(false)
+  const [editingItem, setEditingItem] = useState(null)
 
   function set(field, value) {
     setForm(f => ({ ...f, [field]: value }))
@@ -117,6 +119,7 @@ export default function Cart() {
                           <button className={styles.qtyBtn} onClick={() => updateQty(item.cartId, item.quantity + 1)}>+</button>
                         </div>
                         <span className={styles.itemPrice}>{item.product.price * item.quantity} Bs.</span>
+                        <button className={styles.editBtn} onClick={() => setEditingItem(item)} aria-label="Editar">✏️</button>
                         <button className={styles.removeBtn} onClick={() => removeItem(item.cartId)} aria-label="Eliminar">🗑</button>
                       </div>
                     </div>
@@ -244,6 +247,14 @@ export default function Cart() {
           </div>
         )}
       </aside>
+
+      {editingItem && (
+        <ProductModal
+          product={editingItem.product}
+          editItem={editingItem}
+          onClose={() => setEditingItem(null)}
+        />
+      )}
     </>
   )
 }

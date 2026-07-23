@@ -3,12 +3,12 @@ import { useCart } from '../../context/CartContext'
 import { extrasPorCategoria, nivelesPickante } from '../../data/products'
 import styles from './ProductModal.module.css'
 
-export default function ProductModal({ product, onClose }) {
-  const { addItem } = useCart()
-  const [qty, setQty] = useState(1)
-  const [extras, setExtras] = useState([])
-  const [picante, setPicante] = useState('')
-  const [obs, setObs] = useState('')
+export default function ProductModal({ product, editItem, onClose }) {
+  const { addItem, updateItem } = useCart()
+  const [qty, setQty] = useState(editItem?.quantity ?? 1)
+  const [extras, setExtras] = useState(editItem?.customization.extras ?? [])
+  const [picante, setPicante] = useState(editItem?.customization.picante ?? '')
+  const [obs, setObs] = useState(editItem?.customization.observaciones ?? '')
 
   const extrasDisponibles = extrasPorCategoria[product.category] ?? []
 
@@ -22,7 +22,11 @@ export default function ProductModal({ product, onClose }) {
   }
 
   function handleAdd() {
-    addItem(product, qty, { extras, picante, observaciones: obs.trim() })
+    if (editItem) {
+      updateItem(editItem.cartId, qty, { extras, picante, observaciones: obs.trim() })
+    } else {
+      addItem(product, qty, { extras, picante, observaciones: obs.trim() })
+    }
     onClose()
   }
 
@@ -102,7 +106,7 @@ export default function ProductModal({ product, onClose }) {
               <button type="button" onClick={() => setQty(q => q + 1)} className={styles.qtyBtn}>+</button>
             </div>
             <button type="button" className={styles.addBtn} onClick={handleAdd}>
-              Agregar · {product.price * qty} Bs.
+              {editItem ? 'Guardar cambios' : 'Agregar'} · {product.price * qty} Bs.
             </button>
           </div>
         </div>
