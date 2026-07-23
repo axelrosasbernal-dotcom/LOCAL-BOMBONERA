@@ -3,7 +3,7 @@ import { useCart } from '../../context/CartContext'
 import { businessInfo } from '../../data/products'
 import styles from './Cart.module.css'
 
-const INITIAL_FORM = { nombre: '', telefono: '', tipo: 'retiro', direccion: '', referencia: '' }
+const INITIAL_FORM = { nombre: '', telefono: '', tipo: 'retiro', direccion: '', referencia: '', horario: 'ahora', horaProgramada: '' }
 
 function buildWhatsAppMsg(items, total, form) {
   const lines = []
@@ -17,6 +17,7 @@ function buildWhatsAppMsg(items, total, form) {
     lines.push(`*Dirección:* ${form.direccion}`)
     if (form.referencia.trim()) lines.push(`*Referencia:* ${form.referencia}`)
   }
+  lines.push(`*Horario de retiro:* ${form.horario === 'programado' ? form.horaProgramada : 'Ahora mismo'}`)
   lines.push('')
   lines.push('*Pedido:*')
   items.forEach(item => {
@@ -50,6 +51,7 @@ export default function Cart() {
     if (!form.nombre.trim())   e.nombre    = 'Requerido'
     if (!form.telefono.trim()) e.telefono  = 'Requerido'
     if (form.tipo === 'delivery' && !form.direccion.trim()) e.direccion = 'Requerido'
+    if (form.horario === 'programado' && !form.horaProgramada) e.horaProgramada = 'Requerido'
     setErrors(e)
     return Object.keys(e).length === 0
   }
@@ -169,6 +171,40 @@ export default function Cart() {
                     <span className={styles.tipoPronto}>Próximamente</span>
                   </div>
                 </div>
+
+                {form.tipo === 'retiro' && (
+                  <>
+                    <div className={styles.tipoRow}>
+                      <button
+                        type="button"
+                        className={`${styles.tipoBtn} ${form.horario === 'ahora' ? styles.tipoActive : ''}`}
+                        onClick={() => set('horario', 'ahora')}
+                      >
+                        ⏱ Retiro ahora
+                      </button>
+                      <button
+                        type="button"
+                        className={`${styles.tipoBtn} ${form.horario === 'programado' ? styles.tipoActive : ''}`}
+                        onClick={() => set('horario', 'programado')}
+                      >
+                        🕒 Elegir horario
+                      </button>
+                    </div>
+
+                    {form.horario === 'programado' && (
+                      <div className={styles.field}>
+                        <label className={styles.label}>Hora de retiro *</label>
+                        <input
+                          className={`${styles.input} ${errors.horaProgramada ? styles.inputError : ''}`}
+                          type="time"
+                          value={form.horaProgramada}
+                          onChange={e => set('horaProgramada', e.target.value)}
+                        />
+                        {errors.horaProgramada && <span className={styles.error}>{errors.horaProgramada}</span>}
+                      </div>
+                    )}
+                  </>
+                )}
 
               </div>
             </>
