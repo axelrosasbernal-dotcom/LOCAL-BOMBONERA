@@ -69,11 +69,37 @@
   color: var(--text-white);
 }
 
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.25rem;
+}
+
 .priceRow {
   display: flex;
   align-items: baseline;
   gap: 0.6rem;
-  margin-top: 0.25rem;
+}
+
+.orderBtn {
+  background: var(--yellow);
+  color: var(--blue-dark);
+  font-weight: 800;
+  font-size: 0.95rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radius-sm);
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.orderBtn:hover {
+  background: var(--yellow-light);
+  transform: translateY(-1px);
 }
 
 .priceOld {

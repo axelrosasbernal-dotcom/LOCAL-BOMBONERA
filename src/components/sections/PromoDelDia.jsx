@@ -1,23 +1,14 @@
-import { useDailyPromo } from '../../context/DailyPromoContext'
-import { usePrices } from '../../context/PriceContext'
-import { products, diasSemana } from '../../data/products'
+import { useState } from 'react'
+import { useTodayPromo } from '../../hooks/useTodayPromo'
+import ProductModal from '../ui/ProductModal'
 import styles from './PromoDelDia.module.css'
 
 export default function PromoDelDia() {
-  const { promoMap } = useDailyPromo()
-  const { priceMap } = usePrices()
-  const today = new Date().getDay()
-  const promo = promoMap[today]
+  const [ordering, setOrdering] = useState(false)
+  const data = useTodayPromo()
 
-  if (!promo?.activa || !promo.titulo.trim()) return null
-
-  const productosIncluidos = promo.product_ids
-    .map(id => products.find(p => p.id === id))
-    .filter(Boolean)
-
-  const sumaPrecios = productosIncluidos.reduce((sum, p) => sum + (priceMap[p.id] ?? p.price), 0)
-  const precioFinal = promo.precio_combo ?? (productosIncluidos.length > 0 ? sumaPrecios : null)
-  const nombreDia = diasSemana.find(d => d.valor === today)?.nombre
+  if (!data) return null
+  const { promo, productosIncluidos, sumaPrecios, precioFinal, nombreDia, comboProduct } = data
 
   return (
     <section className={styles.section}>
@@ -42,15 +33,26 @@ export default function PromoDelDia() {
           </div>
         )}
 
-        {precioFinal != null && (
-          <div className={styles.priceRow}>
-            {promo.precio_combo != null && (
-              <span className={styles.priceOld}>{sumaPrecios} Bs.</span>
-            )}
-            <span className={styles.priceNew}>{precioFinal} Bs.</span>
-          </div>
-        )}
+        <div className={styles.footer}>
+          {precioFinal != null && (
+            <div className={styles.priceRow}>
+              {promo.precio_combo != null && (
+                <span className={styles.priceOld}>{sumaPrecios} Bs.</span>
+              )}
+              <span className={styles.priceNew}>{precioFinal} Bs.</span>
+            </div>
+          )}
+          {comboProduct && (
+            <button type="button" className={styles.orderBtn} onClick={() => setOrdering(true)}>
+              🛒 Pedir esta promo
+            </button>
+          )}
+        </div>
       </div>
+
+      {ordering && comboProduct && (
+        <ProductModal product={comboProduct} onClose={() => setOrdering(false)} />
+      )}
     </section>
   )
 }

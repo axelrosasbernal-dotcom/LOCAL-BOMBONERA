@@ -1,4 +1,5 @@
 import { products, categories } from '../../data/products'
+import { useTodayPromo } from '../../hooks/useTodayPromo'
 import ProductCard from '../ui/ProductCard'
 import styles from './FeaturedProducts.module.css'
 
@@ -8,6 +9,8 @@ export default function FeaturedProducts({ filterCategory }) {
     : products
 
   const activeCat = categories.find(c => c.id === filterCategory)
+  const todayPromo = useTodayPromo()
+  const comboProduct = !filterCategory ? todayPromo?.comboProduct : null
 
   return (
     <section className={styles.section} id="menu">
@@ -28,6 +31,7 @@ export default function FeaturedProducts({ filterCategory }) {
           <p className={styles.empty}>Próximamente más productos en esta categoría.</p>
         ) : (
           <div className={styles.grid}>
+            {comboProduct && <ProductCard key={comboProduct.id} product={comboProduct} />}
             {filtered.map(product => (
               <ProductCard key={product.id} product={product} />
             ))}
