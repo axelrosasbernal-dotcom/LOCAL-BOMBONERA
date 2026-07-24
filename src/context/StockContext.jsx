@@ -96,20 +96,29 @@ export function StockProvider({ children }) {
   }, [])
 
   const toggleStock = async (productId) => {
-    const newValue = !(stockMap[productId] !== false)
+    const prevValue = stockMap[productId] !== false
+    const newValue = !prevValue
 
-    // Guarda inmediatamente en localStorage — no depende de Supabase
+    // Actualiza la UI al instante (optimista)
     applyMap(prev => ({ ...prev, [productId]: newValue }))
 
     // Notifica otras pestañas al instante
     try { bcRef.current?.postMessage({ type: 'stock_update', productId, inStock: newValue }) } catch {}
 
-    // Intenta sincronizar con Supabase (best-effort, no bloquea ni revierte)
+    // Sincroniza con Supabase — es la fuente de verdad para otros dispositivos.
+    // Si falla, revertimos el optimismo y avisamos: si no, el admin cree que
+    // guardó pero otros dispositivos (celular) nunca ven el cambio.
     const { error } = await supabase.from('stock').upsert(
       { product_id: productId, in_stock: newValue },
       { onConflict: 'product_id' }
     )
-    if (error) console.warn('[Stock] Supabase sync falló (cambio guardado localmente):', error.message)
+    if (error) {
+      console.warn('[Stock] Supabase sync falló:', error.message)
+      applyMap(prev => ({ ...prev, [productId]: prevValue }))
+      try { bcRef.current?.postMessage({ type: 'stock_update', productId, inStock: prevValue }) } catch {}
+      return { error }
+    }
+    return { error: null }
   }
 
   return (

@@ -13,6 +13,7 @@ export default function Admin() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [toggling, setToggling] = useState(null)
+  const [syncError, setSyncError] = useState('')
 
   const handleLogin = (e) => {
     e.preventDefault()
@@ -31,7 +32,11 @@ export default function Admin() {
 
   const handleToggle = async (productId) => {
     setToggling(productId)
-    await toggleStock(productId)
+    setSyncError('')
+    const { error } = await toggleStock(productId)
+    if (error) {
+      setSyncError('No se pudo guardar el cambio en el servidor. Revisá tu conexión e intentá de nuevo.')
+    }
     setToggling(null)
   }
 
@@ -81,6 +86,14 @@ export default function Admin() {
       </header>
 
       <main className={styles.main}>
+        {syncError && (
+          <div style={{
+            background: '#fee2e2', color: '#991b1b', padding: '0.75rem 1rem',
+            borderRadius: '8px', marginBottom: '1rem', fontWeight: 500,
+          }}>
+            ⚠️ {syncError}
+          </div>
+        )}
         <div className={styles.statsRow}>
           <div className={styles.stat}>
             <span className={styles.statNum}>{disponibles}</span>
