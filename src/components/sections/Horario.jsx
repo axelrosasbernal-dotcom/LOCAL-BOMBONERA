@@ -1,16 +1,18 @@
-import { horario, businessInfo } from '../../data/products'
+import { businessInfo } from '../../data/products'
+import { useSettings } from '../../context/SettingsContext'
 import styles from './Horario.module.css'
 
-function getEstado() {
+function getEstado(apertura, cierre) {
   const now = new Date()
   const mins = now.getHours() * 60 + now.getMinutes()
-  const apertura = horario.aperturaH * 60 + horario.aperturaM
-  const cierre   = horario.cierreH   * 60 + horario.cierreM
-  return mins >= apertura && mins <= cierre
+  const [aH, aM] = apertura.split(':').map(Number)
+  const [cH, cM] = cierre.split(':').map(Number)
+  return mins >= aH * 60 + aM && mins <= cH * 60 + cM
 }
 
 export default function Horario() {
-  const abierto = getEstado()
+  const { settings } = useSettings()
+  const abierto = !settings.manual_closed && getEstado(settings.apertura, settings.cierre)
 
   return (
     <section className={styles.section}>
@@ -19,7 +21,7 @@ export default function Horario() {
           <div className={styles.statusRow}>
             <span className={`${styles.dot} ${abierto ? styles.dotOpen : styles.dotClosed}`} />
             <span className={`${styles.status} ${abierto ? styles.statusOpen : styles.statusClosed}`}>
-              {abierto ? 'Abierto ahora' : 'Cerrado ahora'}
+              {settings.manual_closed ? 'Cerrado hoy' : abierto ? 'Abierto ahora' : 'Cerrado ahora'}
             </span>
           </div>
 
@@ -28,11 +30,11 @@ export default function Horario() {
           <div className={styles.info}>
             <div className={styles.infoRow}>
               <span className={styles.infoIcon}>📅</span>
-              <span>{horario.label}</span>
+              <span>{settings.horario_label}</span>
             </div>
             <div className={styles.infoRow}>
               <span className={styles.infoIcon}>⏰</span>
-              <span>{horario.apertura} – {horario.cierre}</span>
+              <span>{settings.apertura} – {settings.cierre}</span>
             </div>
           </div>
 

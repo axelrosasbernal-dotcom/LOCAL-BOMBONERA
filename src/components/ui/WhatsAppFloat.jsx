@@ -1,7 +1,11 @@
 import { businessInfo } from '../../data/products'
+import { useSettings } from '../../context/SettingsContext'
 import styles from './WhatsAppFloat.module.css'
 
 export default function WhatsAppFloat() {
+  const { settings } = useSettings()
+  if (settings.manual_closed) return null
+
   const url = `https://wa.me/${businessInfo.whatsapp}?text=${encodeURIComponent('Hola! Quiero hacer un pedido 🍔')}`
   return (
     <a

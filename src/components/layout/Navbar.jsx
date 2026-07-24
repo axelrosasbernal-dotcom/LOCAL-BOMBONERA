@@ -2,12 +2,15 @@ import { useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { useTheme } from '../../context/ThemeContext'
 import { useCart } from '../../context/CartContext'
+import { useSettings } from '../../context/SettingsContext'
 import styles from './Navbar.module.css'
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
   const { dark, toggle } = useTheme()
   const { count, openCart } = useCart()
+  const { settings } = useSettings()
+  const cerrado = settings.manual_closed
 
   return (
     <header className={styles.header}>
@@ -27,7 +30,12 @@ export default function Navbar() {
           <li><a href="#categorias" className={styles.link} onClick={() => setOpen(false)}>Menú</a></li>
           <li><a href="#menu" className={styles.link} onClick={() => setOpen(false)}>Destacados</a></li>
           <li><a href="#contacto" className={styles.link} onClick={() => setOpen(false)}>Contacto</a></li>
-          <li><a href="#menu" className={styles.ctaMobile} onClick={() => setOpen(false)}>🛒 Pedir Ahora</a></li>
+          <li>
+            {cerrado
+              ? <span className={styles.ctaMobile} aria-disabled="true">🔴 Cerrado hoy</span>
+              : <a href="#menu" className={styles.ctaMobile} onClick={() => setOpen(false)}>🛒 Pedir Ahora</a>
+            }
+          </li>
         </ul>
 
         {/* Actions */}
@@ -50,7 +58,10 @@ export default function Navbar() {
             {count > 0 && <span className={styles.cartCount}>{count}</span>}
           </button>
 
-          <a href="#menu" className={styles.cta}>Pedir Ahora</a>
+          {cerrado
+            ? <span className={styles.cta} aria-disabled="true">🔴 Cerrado hoy</span>
+            : <a href="#menu" className={styles.cta}>Pedir Ahora</a>
+          }
 
           <button
             className={styles.hamburger}

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useCart } from '../../context/CartContext'
+import { useSettings } from '../../context/SettingsContext'
 import { businessInfo } from '../../data/products'
 import ProductModal from './ProductModal'
 import styles from './Cart.module.css'
@@ -39,6 +40,7 @@ function buildWhatsAppMsg(items, total, form) {
 
 export default function Cart() {
   const { items, total, count, isOpen, closeCart, removeItem, updateQty, clearCart } = useCart()
+  const { settings } = useSettings()
   const [form, setForm] = useState(INITIAL_FORM)
   const [errors, setErrors] = useState({})
   const [sent, setSent] = useState(false)
@@ -237,10 +239,15 @@ export default function Cart() {
 
         {items.length > 0 && (
           <div className={styles.sendWrap}>
+            {settings.manual_closed && (
+              <p style={{ color: '#991b1b', fontWeight: 500, marginBottom: '0.5rem', textAlign: 'center' }}>
+                🔴 El local está cerrado hoy, no se reciben pedidos.
+              </p>
+            )}
             <button
               className={`${styles.sendBtn} ${sent ? styles.sendBtnSent : ''}`}
               onClick={handleSend}
-              disabled={sent}
+              disabled={sent || settings.manual_closed}
             >
               {sent ? '✓ Pedido enviado' : '📲 Enviar Pedido por WhatsApp'}
             </button>
