@@ -33,11 +33,16 @@ export default function Admin() {
   const handleToggle = async (productId) => {
     setToggling(productId)
     setSyncError('')
-    const { error } = await toggleStock(productId)
-    if (error) {
+    try {
+      const { error } = await toggleStock(productId)
+      if (error) {
+        setSyncError('No se pudo guardar el cambio en el servidor. Revisá tu conexión e intentá de nuevo.')
+      }
+    } catch {
       setSyncError('No se pudo guardar el cambio en el servidor. Revisá tu conexión e intentá de nuevo.')
+    } finally {
+      setToggling(null)
     }
-    setToggling(null)
   }
 
   if (!autenticado) {

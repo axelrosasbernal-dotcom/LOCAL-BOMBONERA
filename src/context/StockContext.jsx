@@ -106,19 +106,30 @@ export function StockProvider({ children }) {
     try { bcRef.current?.postMessage({ type: 'stock_update', productId, inStock: newValue }) } catch {}
 
     // Sincroniza con Supabase — es la fuente de verdad para otros dispositivos.
-    // Si falla, revertimos el optimismo y avisamos: si no, el admin cree que
-    // guardó pero otros dispositivos (celular) nunca ven el cambio.
-    const { error } = await supabase.from('stock').upsert(
-      { product_id: productId, in_stock: newValue },
-      { onConflict: 'product_id' }
-    )
-    if (error) {
-      console.warn('[Stock] Supabase sync falló:', error.message)
-      applyMap(prev => ({ ...prev, [productId]: prevValue }))
-      try { bcRef.current?.postMessage({ type: 'stock_update', productId, inStock: prevValue }) } catch {}
-      return { error }
+    // Si falla (incluso a nivel de red, no solo error de respuesta), revertimos
+    // el optimismo y avisamos: si no, el admin cree que guardó pero otros
+    // dispositivos (celular) nunca ven el cambio. Reintenta ante fallas de red
+    // transitorias (wifi inestable, etc.) antes de darse por vencido.
+    const MAX_INTENTOS = 3
+    let lastError = null
+    for (let intento = 1; intento <= MAX_INTENTOS; intento++) {
+      try {
+        const { error } = await supabase.from('stock').upsert(
+          { product_id: productId, in_stock: newValue },
+          { onConflict: 'product_id' }
+        )
+        if (!error) return { error: null }
+        lastError = error
+      } catch (err) {
+        lastError = err
+      }
+      if (intento < MAX_INTENTOS) await new Promise(r => setTimeout(r, 500 * intento))
     }
-    return { error: null }
+
+    console.warn('[Stock] Supabase sync falló tras reintentos:', lastError?.message || lastError)
+    applyMap(prev => ({ ...prev, [productId]: prevValue }))
+    try { bcRef.current?.postMessage({ type: 'stock_update', productId, inStock: prevValue }) } catch {}
+    return { error: lastError }
   }
 
   return (
