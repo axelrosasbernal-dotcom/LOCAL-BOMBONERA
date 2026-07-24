@@ -40,8 +40,8 @@ export default function Navbar() {
 
         {/* Actions */}
         <div className={styles.actions}>
-          <a href="tel:77289212" className={styles.phone}>
-            <span>📞</span> 77289212
+          <a href="tel:75711571" className={styles.phone}>
+            <span>📞</span> 75711571
           </a>
 
           <button

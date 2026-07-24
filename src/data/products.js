@@ -1,10 +1,10 @@
 export const businessInfo = {
   name: "Burguer's La Bombonera",
   whatsapp: '59175711571',
-  phones: ['77289212', '75711571'],
-  locations: ['Tarapacá esq. León', 'Tarapacá entre Sucre y Murguia'],
+  phones: ['75711571'],
+  locations: ['Tarapacá entre Sucre y Murguia'],
   city: 'Oruro, Bolivia',
-  mapsQuery: 'Tarapacá+esq+León+Oruro+Bolivia',
+  mapsQuery: 'Tarapacá+entre+Sucre+y+Murguia+Oruro+Bolivia',
 }
 
 export const horario = {

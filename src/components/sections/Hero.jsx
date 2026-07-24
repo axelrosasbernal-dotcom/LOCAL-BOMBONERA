@@ -25,14 +25,12 @@ export default function Hero() {
           <a href="#categorias" className={styles.btnPrimary}>
             🍔 Ver Menú Completo
           </a>
-          <a href="tel:77289212" className={styles.btnSecondary}>
+          <a href="tel:75711571" className={styles.btnSecondary}>
             📞 Pedir Ahora
           </a>
         </div>
 
         <div className={styles.phones}>
-          <span>📍 Tarapacá esq. León</span>
-          <span className={styles.dot}>·</span>
           <span>📍 Tarapacá entre Sucre y Murguia</span>
         </div>
       </div>

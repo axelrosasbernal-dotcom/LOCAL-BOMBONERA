@@ -25,13 +25,11 @@ export default function ContactFooter() {
         <div className={styles.info}>
           <div className={styles.block}>
             <h4 className={styles.blockTitle}>📞 Teléfonos</h4>
-            <a href="tel:77289212" className={styles.link}>77289212 — Central</a>
-            <a href="tel:75711571" className={styles.link}>75711571 — Sucursal</a>
+            <a href="tel:75711571" className={styles.link}>75711571</a>
           </div>
 
           <div className={styles.block}>
-            <h4 className={styles.blockTitle}>📍 Ubicaciones</h4>
-            <p className={styles.text}>Tarapacá esq. León</p>
+            <h4 className={styles.blockTitle}>📍 Ubicación</h4>
             <p className={styles.text}>Tarapacá entre Sucre y Murguia</p>
           </div>
 
