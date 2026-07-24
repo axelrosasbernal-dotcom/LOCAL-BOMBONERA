@@ -1,6 +1,11 @@
 import { createContext, useContext, useReducer, useState } from 'react'
+import { cocaColaPrice } from '../data/products'
 
 const CartContext = createContext(null)
+
+export function itemUnitPrice(item) {
+  return item.product.price + (item.customization.bebida ? cocaColaPrice : 0)
+}
 
 function reducer(state, action) {
   switch (action.type) {
@@ -43,7 +48,7 @@ export function CartProvider({ children }) {
   const updateItem  = (cartId, quantity, customization) => dispatch({ type: 'UPDATE_ITEM', cartId, quantity, customization })
   const clearCart   = ()                 => dispatch({ type: 'CLEAR' })
 
-  const total = items.reduce((sum, i) => sum + i.product.price * i.quantity, 0)
+  const total = items.reduce((sum, i) => sum + itemUnitPrice(i) * i.quantity, 0)
   const count = items.reduce((sum, i) => sum + i.quantity, 0)
 
   return (

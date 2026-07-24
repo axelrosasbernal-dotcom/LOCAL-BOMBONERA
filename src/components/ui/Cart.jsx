@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useCart } from '../../context/CartContext'
+import { useCart, itemUnitPrice } from '../../context/CartContext'
 import { useSettings } from '../../context/SettingsContext'
 import { businessInfo } from '../../data/products'
 import ProductModal from './ProductModal'
@@ -28,6 +28,7 @@ function buildWhatsAppMsg(items, total, form) {
     const detalles = []
     if (item.customization.picante) detalles.push(item.customization.picante)
     if (item.customization.extras?.length) detalles.push(...item.customization.extras)
+    if (item.customization.bebida) detalles.push('🥤 Coca Cola')
     if (detalles.length) lines.push(`  _${detalles.join(', ')}_`)
     if (item.customization.observaciones) lines.push(`  _Obs: ${item.customization.observaciones}_`)
   })
@@ -112,6 +113,9 @@ export default function Cart() {
                       {item.customization.extras?.length > 0 && (
                         <p className={styles.itemDetail}>{item.customization.extras.join(' · ')}</p>
                       )}
+                      {item.customization.bebida && (
+                        <p className={styles.itemDetail}>🥤 Coca Cola</p>
+                      )}
                       {item.customization.observaciones && (
                         <p className={styles.itemDetail}>📝 {item.customization.observaciones}</p>
                       )}
@@ -121,7 +125,7 @@ export default function Cart() {
                           <span className={styles.qtyNum}>{item.quantity}</span>
                           <button className={styles.qtyBtn} onClick={() => updateQty(item.cartId, item.quantity + 1)}>+</button>
                         </div>
-                        <span className={styles.itemPrice}>{item.product.price * item.quantity} Bs.</span>
+                        <span className={styles.itemPrice}>{itemUnitPrice(item) * item.quantity} Bs.</span>
                         <button className={styles.editBtn} onClick={() => setEditingItem(item)} aria-label="Editar">✏️</button>
                         <button className={styles.removeBtn} onClick={() => removeItem(item.cartId)} aria-label="Eliminar">🗑</button>
                       </div>

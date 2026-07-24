@@ -26,6 +26,18 @@ export const extrasPorCategoria = {
 
 export const nivelesPickante = ['Poco picante', 'Medio picante', 'Muy picante']
 
+export const cocaColaPrice = 8
+
+export const diasSemana = [
+  { valor: 1, nombre: 'Lunes' },
+  { valor: 2, nombre: 'Martes' },
+  { valor: 3, nombre: 'Miércoles' },
+  { valor: 4, nombre: 'Jueves' },
+  { valor: 5, nombre: 'Viernes' },
+  { valor: 6, nombre: 'Sábado' },
+  { valor: 0, nombre: 'Domingo' },
+]
+
 export const categories = [
   { id: 'hamburguesas', name: 'Hamburguesas', icon: '🍔', description: 'Nuestras burgers icónicas' },
   { id: 'lomitos',      name: 'Lomitos',      icon: '🥖', description: 'El clásico que enamora' },

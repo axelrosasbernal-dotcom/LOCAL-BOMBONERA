@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Hero from '../components/sections/Hero'
+import PromoDelDia from '../components/sections/PromoDelDia'
 import Categories from '../components/sections/Categories'
 import FeaturedProducts from '../components/sections/FeaturedProducts'
 import Promos from '../components/sections/Promos'
@@ -15,6 +16,7 @@ export default function Home() {
   return (
     <>
       <Hero />
+      <PromoDelDia />
       <Categories activeCategory={activeCategory} onSelect={setActiveCategory} />
       <FeaturedProducts filterCategory={activeCategory} />
       <Promos />

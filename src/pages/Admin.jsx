@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { useStock } from '../context/StockContext'
 import { usePrices } from '../context/PriceContext'
 import { useSettings } from '../context/SettingsContext'
-import { products } from '../data/products'
+import { useDailyPromo } from '../context/DailyPromoContext'
+import { products, diasSemana } from '../data/products'
 import styles from './Admin.module.css'
 
 const ADMIN_PASSWORD = 'bombonera2024'
@@ -11,6 +12,7 @@ export default function Admin() {
   const { stockMap, toggleStock } = useStock()
   const { priceMap, updatePrice } = usePrices()
   const { settings, updateSettings } = useSettings()
+  const { promoMap, updatePromo } = useDailyPromo()
   const [autenticado, setAutenticado] = useState(
     () => localStorage.getItem('admin_auth') === 'ok'
   )
@@ -26,6 +28,42 @@ export default function Admin() {
   const [horarioDraft, setHorarioDraft] = useState(null)
   const [savingHorario, setSavingHorario] = useState(false)
   const [horarioError, setHorarioError] = useState('')
+
+  const [selectedDay, setSelectedDay] = useState(() => new Date().getDay())
+  const [promoDraft, setPromoDraft] = useState(promoMap[selectedDay])
+  const [renderedDay, setRenderedDay] = useState(selectedDay)
+  const [savingPromo, setSavingPromo] = useState(false)
+  const [promoError, setPromoError] = useState('')
+  const [promoSaved, setPromoSaved] = useState(false)
+
+  if (selectedDay !== renderedDay) {
+    setRenderedDay(selectedDay)
+    setPromoDraft(promoMap[selectedDay])
+    setPromoError('')
+    setPromoSaved(false)
+  }
+
+  const toggleProductoEnPromo = (productId) => {
+    setPromoDraft(d => ({
+      ...d,
+      product_ids: d.product_ids.includes(productId)
+        ? d.product_ids.filter(id => id !== productId)
+        : [...d.product_ids, productId],
+    }))
+    setPromoSaved(false)
+  }
+
+  const handleSavePromo = async () => {
+    setSavingPromo(true)
+    setPromoError('')
+    const { error } = await updatePromo(selectedDay, promoDraft)
+    setSavingPromo(false)
+    if (error) {
+      setPromoError('No se pudo guardar la promo. Revisá tu conexión e intentá de nuevo.')
+    } else {
+      setPromoSaved(true)
+    }
+  }
 
   const handleToggleClosed = async () => {
     setSavingClosed(true)
@@ -269,6 +307,114 @@ export default function Admin() {
               <button className={styles.toggleBtn} onClick={startEditHorario}>
                 ✏️ Editar horario
               </button>
+            )}
+          </div>
+        </section>
+
+        <section className={styles.section} style={{ marginBottom: '1.5rem' }}>
+          <h2 className={styles.sectionTitle}>Promo del día</h2>
+          <div style={{ padding: '1rem 1.25rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+              {diasSemana.map(dia => {
+                const tienePromo = promoMap[dia.valor]?.activa && promoMap[dia.valor]?.titulo
+                return (
+                  <button
+                    key={dia.valor}
+                    type="button"
+                    onClick={() => setSelectedDay(dia.valor)}
+                    className={styles.toggleBtn}
+                    style={{
+                      background: selectedDay === dia.valor ? 'var(--yellow)' : 'var(--blue-mid)',
+                      color: selectedDay === dia.valor ? 'var(--blue-dark)' : 'var(--text-white)',
+                    }}
+                  >
+                    {dia.nombre}{tienePromo ? ' 🔥' : ''}
+                  </button>
+                )
+              })}
+            </div>
+
+            {promoDraft && (
+              <>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                  <label>
+                    Título<br />
+                    <input
+                      type="text"
+                      placeholder="Ej: 2x1 en hamburguesas"
+                      value={promoDraft.titulo}
+                      onChange={e => { setPromoDraft(d => ({ ...d, titulo: e.target.value })); setPromoSaved(false) }}
+                      style={{ width: '100%', padding: '0.5rem 0.6rem', borderRadius: '6px', border: '1px solid #ccc' }}
+                    />
+                  </label>
+                  <label>
+                    Descripción<br />
+                    <textarea
+                      placeholder="Ej: Válido todo el día en el local"
+                      value={promoDraft.descripcion}
+                      onChange={e => { setPromoDraft(d => ({ ...d, descripcion: e.target.value })); setPromoSaved(false) }}
+                      rows={2}
+                      style={{ width: '100%', padding: '0.5rem 0.6rem', borderRadius: '6px', border: '1px solid #ccc', resize: 'vertical' }}
+                    />
+                  </label>
+                </div>
+
+                <div>
+                  <p style={{ marginBottom: '0.5rem', fontWeight: 600 }}>Productos incluidos (armá el combo)</p>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                    {products.map(p => (
+                      <button
+                        key={p.id}
+                        type="button"
+                        onClick={() => toggleProductoEnPromo(p.id)}
+                        className={styles.toggleBtn}
+                        style={{
+                          background: promoDraft.product_ids.includes(p.id) ? 'rgba(245, 197, 0, 0.25)' : 'var(--blue-mid)',
+                          color: 'var(--text-white)',
+                          border: promoDraft.product_ids.includes(p.id) ? '1px solid var(--yellow)' : '1px solid var(--border-blue)',
+                        }}
+                      >
+                        {promoDraft.product_ids.includes(p.id) ? '✓ ' : ''}{p.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <label>
+                  Precio combo (opcional — si no lo definís, se muestra la suma de precios)<br />
+                  <input
+                    type="number"
+                    min="0"
+                    step="1"
+                    placeholder="Ej: 35"
+                    value={promoDraft.precio_combo ?? ''}
+                    onChange={e => { setPromoDraft(d => ({ ...d, precio_combo: e.target.value === '' ? null : Number(e.target.value) })); setPromoSaved(false) }}
+                    style={{ width: '8rem', padding: '0.5rem 0.6rem', borderRadius: '6px', border: '1px solid #ccc' }}
+                  />
+                  {' '}Bs.
+                </label>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <button
+                    type="button"
+                    className={`${styles.toggleBtn} ${promoDraft.activa ? styles.btnMarkOut : styles.btnMarkAvail}`}
+                    onClick={() => { setPromoDraft(d => ({ ...d, activa: !d.activa })); setPromoSaved(false) }}
+                  >
+                    {promoDraft.activa ? '🔴 Desactivar promo' : '🟢 Activar promo'}
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.toggleBtn}
+                    style={{ background: 'var(--yellow)', color: 'var(--blue-dark)' }}
+                    onClick={handleSavePromo}
+                    disabled={savingPromo}
+                  >
+                    {savingPromo ? 'Guardando...' : 'Guardar promo'}
+                  </button>
+                  {promoSaved && <span style={{ color: '#22c55e', fontWeight: 600 }}>✓ Guardado</span>}
+                </div>
+                {promoError && <span style={{ color: '#991b1b', fontSize: '0.85rem' }}>{promoError}</span>}
+              </>
             )}
           </div>
         </section>

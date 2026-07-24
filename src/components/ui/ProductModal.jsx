@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useCart } from '../../context/CartContext'
-import { extrasPorCategoria, nivelesPickante } from '../../data/products'
+import { extrasPorCategoria, nivelesPickante, cocaColaPrice } from '../../data/products'
 import styles from './ProductModal.module.css'
 
 export default function ProductModal({ product, editItem, onClose }) {
@@ -9,6 +9,7 @@ export default function ProductModal({ product, editItem, onClose }) {
   const [extras, setExtras] = useState(editItem?.customization.extras ?? [])
   const [picante, setPicante] = useState(editItem?.customization.picante ?? '')
   const [obs, setObs] = useState(editItem?.customization.observaciones ?? '')
+  const [bebida, setBebida] = useState(editItem?.customization.bebida ?? false)
 
   const extrasDisponibles = extrasPorCategoria[product.category] ?? []
 
@@ -22,13 +23,16 @@ export default function ProductModal({ product, editItem, onClose }) {
   }
 
   function handleAdd() {
+    const customization = { extras, picante, observaciones: obs.trim(), bebida }
     if (editItem) {
-      updateItem(editItem.cartId, qty, { extras, picante, observaciones: obs.trim() })
+      updateItem(editItem.cartId, qty, customization)
     } else {
-      addItem(product, qty, { extras, picante, observaciones: obs.trim() })
+      addItem(product, qty, customization)
     }
     onClose()
   }
+
+  const unitPrice = product.price + (bebida ? cocaColaPrice : 0)
 
   return (
     <div className={styles.overlay} onClick={e => e.target === e.currentTarget && onClose()}>
@@ -89,6 +93,19 @@ export default function ProductModal({ product, editItem, onClose }) {
           )}
 
           <div className={styles.section}>
+            <p className={styles.sectionLabel}>¿Agregás una bebida?</p>
+            <div className={styles.chips}>
+              <button
+                type="button"
+                className={`${styles.chip} ${bebida ? styles.chipActive : ''}`}
+                onClick={() => setBebida(b => !b)}
+              >
+                🥤 Coca Cola +{cocaColaPrice} Bs.
+              </button>
+            </div>
+          </div>
+
+          <div className={styles.section}>
             <p className={styles.sectionLabel}>Observaciones</p>
             <textarea
               className={styles.textarea}
@@ -106,7 +123,7 @@ export default function ProductModal({ product, editItem, onClose }) {
               <button type="button" onClick={() => setQty(q => q + 1)} className={styles.qtyBtn}>+</button>
             </div>
             <button type="button" className={styles.addBtn} onClick={handleAdd}>
-              {editItem ? 'Guardar cambios' : 'Agregar'} · {product.price * qty} Bs.
+              {editItem ? 'Guardar cambios' : 'Agregar'} · {unitPrice * qty} Bs.
             </button>
           </div>
         </div>
