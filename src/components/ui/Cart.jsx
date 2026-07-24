@@ -66,12 +66,13 @@ export default function Cart() {
     const msg = buildWhatsAppMsg(items, total, form)
     window.open(`https://wa.me/${businessInfo.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank')
     setSent(true)
-    setTimeout(() => {
-      clearCart()
-      setForm(INITIAL_FORM)
-      setSent(false)
-      closeCart()
-    }, 1500)
+  }
+
+  function handleConfirmClose() {
+    clearCart()
+    setForm(INITIAL_FORM)
+    setSent(false)
+    closeCart()
   }
 
   if (!isOpen) return null
@@ -244,13 +245,24 @@ export default function Cart() {
                 🔴 El local está cerrado hoy, no se reciben pedidos.
               </p>
             )}
-            <button
-              className={`${styles.sendBtn} ${sent ? styles.sendBtnSent : ''}`}
-              onClick={handleSend}
-              disabled={sent || settings.manual_closed}
-            >
-              {sent ? '✓ Pedido enviado' : '📲 Enviar Pedido por WhatsApp'}
-            </button>
+            {sent ? (
+              <>
+                <p style={{ fontWeight: 500, marginBottom: '0.5rem', textAlign: 'center' }}>
+                  📲 Se abrió WhatsApp — tocá <strong>Enviar</strong> ahí para confirmar tu pedido.
+                </p>
+                <button className={styles.sendBtn} onClick={handleConfirmClose}>
+                  Ya confirmé, cerrar
+                </button>
+              </>
+            ) : (
+              <button
+                className={styles.sendBtn}
+                onClick={handleSend}
+                disabled={settings.manual_closed}
+              >
+                📲 Enviar Pedido por WhatsApp
+              </button>
+            )}
           </div>
         )}
       </aside>
