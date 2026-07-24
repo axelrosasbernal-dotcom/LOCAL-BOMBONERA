@@ -27,6 +27,7 @@ export default function Navbar() {
           <li><a href="#categorias" className={styles.link} onClick={() => setOpen(false)}>Menú</a></li>
           <li><a href="#menu" className={styles.link} onClick={() => setOpen(false)}>Destacados</a></li>
           <li><a href="#contacto" className={styles.link} onClick={() => setOpen(false)}>Contacto</a></li>
+          <li><a href="#menu" className={styles.ctaMobile} onClick={() => setOpen(false)}>🛒 Pedir Ahora</a></li>
         </ul>
 
         {/* Actions */}

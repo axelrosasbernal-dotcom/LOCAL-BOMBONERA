@@ -112,3 +112,17 @@
   .content { grid-template-columns: 1fr }
   .mapWrap { height: 260px }
 }
+
+@media (max-width: 480px) {
+  .section {
+    padding: 2.5rem 1.25rem;
+  }
+
+  .info {
+    padding: 1.25rem;
+  }
+
+  .mapWrap {
+    height: 220px;
+  }
+}

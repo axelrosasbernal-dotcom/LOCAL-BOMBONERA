@@ -26,3 +26,12 @@
   0%, 100% { box-shadow: 0 4px 20px rgba(37,211,102,0.45) }
   50%       { box-shadow: 0 4px 32px rgba(37,211,102,0.75) }
 }
+
+@media (max-width: 480px) {
+  .btn {
+    bottom: 1.1rem;
+    right: 1.1rem;
+    width: 52px;
+    height: 52px;
+  }
+}

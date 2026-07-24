@@ -233,4 +233,27 @@
 @media (max-width: 480px) {
   .modal { max-height: 100dvh; border-radius: var(--radius-md) var(--radius-md) 0 0 }
   .overlay { align-items: flex-end; padding: 0 }
+
+  .qtyBtn {
+    width: 38px;
+    height: 38px;
+  }
+
+  .footer {
+    flex-wrap: wrap;
+  }
+
+  .addBtn {
+    padding: 0.85rem 1rem;
+    font-size: 1rem;
+  }
+
+  .chip {
+    padding: 0.5rem 0.9rem;
+  }
+
+  .close {
+    width: 36px;
+    height: 36px;
+  }
 }
