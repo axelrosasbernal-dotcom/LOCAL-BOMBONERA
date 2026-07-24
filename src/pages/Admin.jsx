@@ -292,7 +292,7 @@ export default function Admin() {
                     src={product.image}
                     alt={product.name}
                     className={styles.productImg}
-                    onError={e => { e.target.src = '/images/hero-banner.jpg' }}
+                    onError={e => { e.target.src = '/images/hero-banner.webp' }}
                   />
                   <div className={styles.productInfo}>
                     <span className={styles.productName}>{product.name}</span>

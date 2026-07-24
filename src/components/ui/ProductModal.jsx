@@ -40,7 +40,7 @@ export default function ProductModal({ product, editItem, onClose }) {
             src={product.image}
             alt={product.name}
             className={styles.img}
-            onError={e => { e.target.src = '/images/hero-banner.jpg' }}
+            onError={e => { e.target.src = '/images/hero-banner.webp' }}
           />
           {product.badge && <span className={styles.badge}>{product.badge}</span>}
         </div>

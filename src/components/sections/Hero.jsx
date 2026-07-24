@@ -39,7 +39,7 @@ export default function Hero() {
 
       <div className={styles.imageWrap}>
         <img
-          src="/images/hero-banner.jpg"
+          src="/images/hero-banner.webp"
           alt="Hamburguesa La Bombonera"
           className={styles.heroImg}
         />

@@ -102,7 +102,7 @@ export default function Cart() {
                       src={item.product.image}
                       alt={item.product.name}
                       className={styles.itemImg}
-                      onError={e => { e.target.src = '/images/hero-banner.jpg' }}
+                      onError={e => { e.target.src = '/images/hero-banner.webp' }}
                     />
                     <div className={styles.itemInfo}>
                       <p className={styles.itemName}>{item.product.name}</p>

@@ -25,7 +25,7 @@ export default function ProductCard({ product: baseProduct }) {
             alt={product.name}
             className={styles.image}
             loading="lazy"
-            onError={e => { e.target.src = '/images/hero-banner.jpg' }}
+            onError={e => { e.target.src = '/images/hero-banner.webp' }}
           />
           {!stockOk && (
             <div className={styles.imageOverlay}>
